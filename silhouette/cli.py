@@ -11,20 +11,21 @@ def cli():
     """
     pass
 
+@cli.command()
+@click.option('--name', prompt=True)
+@click.argument('template_path', callback=validate_project_structure)
+@click.argument('output_dir')
+def local(name, template_path, output_dir):
+    click.echo('New from local path {}'.format(template_path))
+    create_new_from_local(name, template_path, output_dir)
 
 @cli.command()
-@click.argument('template', callback=validate_template_name)
-def local(template):
-    click.echo('New from template {}'.format(template))
-
-
-@cli.command()
-@click.option('--outputDir', type=click.Path(exists=False), default=None)
+@click.option('--name', prompt=True)
 @click.argument('template') # callback=validate_template_name
-def new(outputdir, template):
+@click.argument('output_dir')
+def new(name, template, output_dir):
     click.echo('New from template {}'.format(template))
-    create_new_from_template(template, outputdir)
-
+    create_new_from_template(name, template, output_dir)
 
 @cli.command()
 def init():
