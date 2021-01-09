@@ -14,6 +14,7 @@ from silhouette.download_manager import clone_repo_locally
 from silhouette.validation import validate_project_structure
 from silhouette.template_engine import TemplateEngine
 import click
+from silhouette.utils import FileModifier
 from shutil import copyfile
 
 def handleRemoveReadonly(func, path, exc):
@@ -24,11 +25,16 @@ def clean_temporary_repo(path):
     repo_main_dir = os.listdir(path)[0]
     shutil.rmtree(join(path, repo_main_dir), ignore_errors=False, onerror=handleRemoveReadonly)
 
-def copy_file(src, dst):
+def copy_file(src, dst, template_engine):
     dst_root = dirname(dst)
     if not os.path.exists(dst_root):
         makedirs(dst_root)
-    copyfile(src, dst)
+    
+    original_file = open(src, 'r')
+    content = original_file.read()
+    rendered_content = template_engine.eval_str(content)
+    with open(dst, 'w') as f:
+        f.write(rendered_content)
 
 def render_file_paths(src_paths, vars):
     te = TemplateEngine(vars)
@@ -50,10 +56,7 @@ def create_new_from_local(name, template_path, output_dir):
     mkdir(base_dir)
     
     for src, dst in files_to_dst.items():
-        copy_file(src, base_dir + dst )
-
-    click.secho("{} files copied".format(len(files_to_dst)), fg = "green")
-    pass
+        copy_file(src, base_dir + dst, te)
 
 def create_new_from_template(name, template, output_dir):
     """ Creates a new project from remote template. """
@@ -73,14 +76,3 @@ def create_new_from_template(name, template, output_dir):
             click.prompt(k, default=v)
         # files = [f.replace(local_repo_path, "") for f in glob.glob(local_repo_path + "\\**/*", recursive=True) if isfile(f) ]        
         clean_temporary_repo(tmpdirname)
-
-
-
-class Template():
-    def __init__(self, template):
-        self.template = template
-    def __enter__(self):
-        self.fd = open(self.dev, MODE)
-        return self.fd
-    def __exit__(self, type, value, traceback):
-        close(self.fd)
