@@ -3,6 +3,11 @@ from setuptools import setup
 setup(
     name="silhouette-cli",
     version="1.0.0",
+    description= "Silhouette is a cli tool to bootstrap projects from templates published on Github",
+    author= "Hamza EL KAROUI",
+    author_email= "helkarou@gmail.com",
+    url="https://github.com/sharek-org/Silhouette",
+    license="MIT License",
     packages=["slh"],
     include_package_data=True,
     install_requires=[

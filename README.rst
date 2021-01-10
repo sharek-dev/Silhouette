@@ -8,7 +8,7 @@ Prerequest :
 
 To install using `pip` :
 ```shell
-pip install silhouette
+pip install silhouette-cli
 ```
 
 # Usage
