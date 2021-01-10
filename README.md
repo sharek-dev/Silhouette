@@ -1,5 +1,5 @@
 [![Latest](https://img.shields.io/pypi/v/silhouette-cli)](https://pypi.org/project/silhouette-cli/)
-
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
 # Silhouette
 Silhouette is a simple tool to generate projects from templates published on GitHub or any other Git repository. It's inspired from a great tool called [Giter8](http://www.foundweekends.org/giter8/index.html). It's written in python, but can produce files for any programming language.
@@ -26,7 +26,7 @@ slh new helkaroui/simple-flask-server.slh ./
 
 
 ## List referenced templates
-We keep track of published templates on github and store them to a json file `ref/templates.json`.
+We keep track of published templates on github and store them in a json file `ref/templates.json`.
 
 To list the referenced templates, you can run the following command :
 ```shell

@@ -15,10 +15,12 @@ def clone_repo_locally(tmpdirname, repository):
         git.Git(tmpdirname).clone(repository)
     except ImportError :
         print("error on import. Downloading zip version")
+        # Todo: Handle the case when git is not installed on the system
         download_zip_file()
     return tmpdirname
 
 def download_zip_file(tmpdirname, repository):
+    # Todo: to implement
     pass
 
 

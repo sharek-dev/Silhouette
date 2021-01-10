@@ -9,12 +9,9 @@ from slh.utils import print_table, print_template_tree
 
 @click.group()
 def cli():
-    """
-    Author: Hamza EL KAROUI
-    """
     pass
 
-@cli.command()
+@cli.command(help="Bootstraps a project from local template")
 @click.option('--project_name', prompt=True)
 @click.argument('template_path', callback=validate_project_structure)
 @click.argument('output_dir')
@@ -27,7 +24,7 @@ def local(project_name, template_path, output_dir):
     create_new_from_local(project_name, template_path, output_dir)
     print_template_tree(new_dir_name)
 
-@cli.command()
+@cli.command(help="Bootstraps a project from a template published on Github")
 @click.option('--project_name', prompt=True)
 @click.argument('template', callback=validate_template_name)
 @click.argument('output_dir')
@@ -40,7 +37,7 @@ def new(project_name, template, output_dir):
     create_new_from_template(project_name, template, output_dir)
     print_template_tree(new_dir_name)
 
-@cli.command()
+@cli.command(help="Initiate a template directory")
 @click.option('--template_name', prompt=True)
 @click.argument('output_dir')
 def init(template_name, output_dir):
@@ -50,7 +47,7 @@ def init(template_name, output_dir):
     init_template_layout(new_dir_name)
     print_template_tree(new_dir_name)
 
-@cli.command()
+@cli.command(help="List refrenced templates")
 def list():
     click.secho('Listing referenced templates :', fg="yellow")
     templates = download_templates_reference()
