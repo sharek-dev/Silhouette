@@ -16,6 +16,7 @@ from slh.template_engine import TemplateEngine
 import click
 from slh.utils import FileModifier, TemporaryDirectoryV2
 from shutil import copyfile
+import requests
 
 def handleRemoveReadonly(func, path, exc):
     os.chmod(path, stat.S_IWRITE)
@@ -78,3 +79,45 @@ def init_template_layout(output_dir):
 
     with open(join(output_dir, "default.properties"), "w") as f:
         f.write("[VARS]\nsample=value")
+
+def search_github_for_templates():
+    from rich.progress import Progress
+    url = "https://api.github.com/search/repositories"
+    params = {"q": "slh", "per_page": 50, "page": 0}
+    result = requests.get(url, params = params).json()
+    if "total_count" not in result:
+        raise Exception("Github API Has a rate limitation: {}".format(result["message"]))
+    total_count = result["total_count"]
+    scanned_items = 0
+    _page = 1
+
+    templates = []
+
+    with Progress() as progress:
+        search_task = progress.add_task("[red]Scanning repositories...", total=total_count)
+        while(True):
+            params["per_page"] = 50
+            params["page"] = _page
+            result = requests.get(url, params = params).json()
+            
+            if "items" not in result or len(result["items"]) == 0:
+                break
+            
+            for repo in result["items"]:
+                if not repo["full_name"].endswith(".slh"):
+                    continue
+
+                templates.append(
+                    {
+                        "name": repo["full_name"], 
+                        "author": repo["owner"]["login"], 
+                        "description": repo["description"], 
+                        "url": repo["html_url"]
+                    }
+                )
+            
+            scanned_items += len(result["items"])
+            _page += 1
+            progress.update(search_task, advance=scanned_items)
+    
+    return templates

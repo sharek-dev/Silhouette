@@ -3,7 +3,7 @@ import sys
 import click
 from os.path import join, isdir
 from slh.validation import validate_template_name, validate_project_structure
-from slh.factory import create_new_from_local, create_new_from_template, init_template_layout
+from slh.factory import create_new_from_local, create_new_from_template, init_template_layout, search_github_for_templates
 from slh.download_manager import download_templates_reference
 from slh.utils import print_table, print_template_tree
 
@@ -51,6 +51,13 @@ def init(template_name, output_dir):
 def list():
     click.secho('Listing referenced templates :', fg="yellow")
     templates = download_templates_reference()
+    print_table(["name", "description", "url", "author"],templates)
+
+
+@cli.command(help="List refrenced templates")
+def search_github():
+    click.echo("Search Github for slh templates")
+    templates = search_github_for_templates()
     print_table(["name", "description", "url", "author"],templates)
 
 if __name__== "__main__":
