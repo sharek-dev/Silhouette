@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="silhouette",
+    name="silhouette-cli",
     version="1.0.0",
     packages=["slh"],
     include_package_data=True,
