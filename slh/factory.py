@@ -9,12 +9,12 @@ import glob
 import re
 import configparser
 import io
-from silhouette.config import ApplicationConfig
-from silhouette.download_manager import clone_repo_locally
-from silhouette.validation import validate_project_structure
-from silhouette.template_engine import TemplateEngine
+from slh.config import ApplicationConfig
+from slh.download_manager import clone_repo_locally
+from slh.validation import validate_project_structure
+from slh.template_engine import TemplateEngine
 import click
-from silhouette.utils import FileModifier, TemporaryDirectoryV2
+from slh.utils import FileModifier, TemporaryDirectoryV2
 from shutil import copyfile
 
 def handleRemoveReadonly(func, path, exc):

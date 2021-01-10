@@ -2,10 +2,10 @@ import os
 import sys
 import click
 from os.path import join, isdir
-from silhouette.validation import validate_template_name, validate_project_structure
-from silhouette.factory import create_new_from_local, create_new_from_template, init_template_layout
-from silhouette.download_manager import download_templates_reference
-from silhouette.utils import print_table, print_template_tree
+from slh.validation import validate_template_name, validate_project_structure
+from slh.factory import create_new_from_local, create_new_from_template, init_template_layout
+from slh.download_manager import download_templates_reference
+from slh.utils import print_table, print_template_tree
 
 @click.group()
 def cli():
