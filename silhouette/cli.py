@@ -31,6 +31,10 @@ def new(name, template, output_dir):
 def init():
     click.echo('Dropped the database')
 
+@cli.command()
+def list():
+    click.echo('Listing referenced templates')
+    
 
 if __name__== "__main__":
     cli()

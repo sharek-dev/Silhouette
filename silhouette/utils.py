@@ -1,4 +1,9 @@
 import tempfile
+import os as _os
+import shutil as _shutil
+import errno as _errno
+import weakref as _weakref
+import types as _types
 
 class FileModifierError(Exception):
     pass
@@ -53,12 +58,67 @@ class FileModifier(object):
                     fp.write(line)
         self.__tempfile.close()
 
+class TemporaryDirectoryV2(object):
+    """Create and return a temporary directory.  This has the same
+    behavior as mkdtemp but can be used as a context manager.  For
+    example:
+        with TemporaryDirectoryV2() as tmpdir:
+            ...
+    Upon exiting the context, the directory and everything contained
+    in it are removed.
+    """
 
-class Template():
-    def __init__(self, template):
-        self.template = template
+    def __init__(self, suffix=None, prefix=None, dir=None):
+        self.name = tempfile.mkdtemp(suffix, prefix, dir)
+        self._finalizer = _weakref.finalize(
+            self, self._cleanup, self.name,
+            warn_message="Implicitly cleaning up {!r}".format(self))
+
+    @classmethod
+    def _rmtree(cls, name):
+        def onerror(func, path, exc_info):
+            if issubclass(exc_info[0], PermissionError):
+                def resetperms(path):
+                    try:
+                        _os.chflags(path, 0)
+                        _os.chmod(path, stat.S_IWRITE)
+                    except AttributeError:
+                        pass
+                    _os.chmod(path, 0o700)
+
+                try:
+                    if path != name:
+                        resetperms(_os.path.dirname(path))
+                    resetperms(path)
+
+                    try:
+                        _os.unlink(path)
+                    # PermissionError is raised on FreeBSD for directories
+                    except (IsADirectoryError, PermissionError):
+                        cls._rmtree(path)
+                except FileNotFoundError:
+                    pass
+            elif issubclass(exc_info[0], FileNotFoundError):
+                pass
+            else:
+                raise
+
+        _shutil.rmtree(name, onerror=onerror)
+
+    @classmethod
+    def _cleanup(cls, name, warn_message):
+        cls._rmtree(name)
+        _warnings.warn(warn_message, ResourceWarning)
+
+    def __repr__(self):
+        return "<{} {!r}>".format(self.__class__.__name__, self.name)
+
     def __enter__(self):
-        self.fd = open(self.dev, MODE)
-        return self.fd
-    def __exit__(self, type, value, traceback):
-        close(self.fd)
+        return self.name
+
+    def __exit__(self, exc, value, tb):
+        self.cleanup()
+
+    def cleanup(self):
+        if self._finalizer.detach():
+            self._rmtree(self.name)

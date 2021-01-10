@@ -1,3 +1,5 @@
+import requests
+
 # When Git is not avalable o the system, switch to old way: 
 # wget the repo zip file: http://github.com/[username]/[repo]/archive/master.zip
 
@@ -7,11 +9,18 @@ def clone_repo_locally(tmpdirname, repository):
     """ """
     try:
         import git
+        print("loading git")
+        print("clone git repo {}".format(repository))
+        print("to temporary directory {}".format(tmpdirname))
         git.Git(tmpdirname).clone(repository)
     except ImportError :
+        print("error on import. Downloading zip version")
         download_zip_file()
     return tmpdirname
 
-
 def download_zip_file(tmpdirname, repository):
     pass
+
+
+def download_templates_reference():
+    file_url = "https://raw.githubusercontent.com/user/repository/main/ref/templates.json"

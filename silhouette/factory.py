@@ -14,7 +14,7 @@ from silhouette.download_manager import clone_repo_locally
 from silhouette.validation import validate_project_structure
 from silhouette.template_engine import TemplateEngine
 import click
-from silhouette.utils import FileModifier
+from silhouette.utils import FileModifier, TemporaryDirectoryV2
 from shutil import copyfile
 
 def handleRemoveReadonly(func, path, exc):
@@ -64,15 +64,17 @@ def create_new_from_template(name, template, output_dir):
     repo_user = template.split("/")[0]
     repo_name = template.split("/")[1]
 
-    with tempfile.TemporaryDirectory(prefix=".", dir=os.getcwd()) as tmpdirname:
+    with TemporaryDirectoryV2(prefix=".", dir=os.getcwd()) as tmpdirname:
+        print(tmpdirname)
         clone_repo_locally(tmpdirname, repo_url)
         local_repo_path = join(tmpdirname, repo_name)
+        print("clone done.")
         # properties_file_path = join(local_repo_path, "default.properties")
-        properties_file_path="C:\\Users\\HamzaELKAROUI\\hamza_projects\\Silhouette\\silhouette\\default.properties"
+        properties_file_path="C:\\Users\\HamzaELKAROUI\\hamza_projects\\Silhouette\\tests\\templates\\flask_server\\default.properties"
         app_config = ApplicationConfig(properties_file_path)
         template_vars = app_config.get_vars()
         
         for k,v in template_vars.items():
             click.prompt(k, default=v)
         # files = [f.replace(local_repo_path, "") for f in glob.glob(local_repo_path + "\\**/*", recursive=True) if isfile(f) ]        
-        clean_temporary_repo(tmpdirname)
+        # clean_temporary_repo(tmpdirname)
