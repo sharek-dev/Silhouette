@@ -1,3 +1,6 @@
+[![Latest](https://img.shields.io/pypi/v/silhouette-cli)](https://pypi.org/project/silhouette-cli/)
+
+
 # Silhouette
 Silhouette is a simple tool to generate projects from templates published on GitHub or any other Git repository. It's inspired from a great tool called [Giter8](http://www.foundweekends.org/giter8/index.html). It's written in python, but can produce files for any programming language.
 
