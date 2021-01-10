@@ -65,16 +65,8 @@ def create_new_from_template(name, template, output_dir):
     repo_name = template.split("/")[1]
 
     with TemporaryDirectoryV2(prefix=".", dir=os.getcwd()) as tmpdirname:
-        print(tmpdirname)
         clone_repo_locally(tmpdirname, repo_url)
         local_repo_path = join(tmpdirname, repo_name)
-        print("clone done.")
-        # properties_file_path = join(local_repo_path, "default.properties")
-        properties_file_path="C:\\Users\\HamzaELKAROUI\\hamza_projects\\Silhouette\\tests\\templates\\flask_server\\default.properties"
-        app_config = ApplicationConfig(properties_file_path)
-        template_vars = app_config.get_vars()
-        
-        for k,v in template_vars.items():
-            click.prompt(k, default=v)
-        # files = [f.replace(local_repo_path, "") for f in glob.glob(local_repo_path + "\\**/*", recursive=True) if isfile(f) ]        
-        # clean_temporary_repo(tmpdirname)
+        click.echo("Remote Repository cloned.")
+        validate_project_structure(None, None, local_repo_path)
+        create_new_from_local(name, local_repo_path, output_dir)

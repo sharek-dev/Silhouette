@@ -23,4 +23,6 @@ def download_zip_file(tmpdirname, repository):
 
 
 def download_templates_reference():
-    file_url = "https://raw.githubusercontent.com/user/repository/main/ref/templates.json"
+    file_url = "https://raw.githubusercontent.com/sharek-org/Silhouette/main/ref/templates.json"
+    response = requests.get(file_url)
+    return response.json()

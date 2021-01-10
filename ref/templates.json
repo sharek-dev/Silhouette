@@ -1,10 +1,10 @@
 [
     {
-        "name": "",
-        "author": "",
-        "description": "",
-        "language": "",
-        "tags": [""],
+        "name": "sharek_org/flask.seed",
+        "author": "Sharek.org",
+        "description": "a simple Flask server template",
+        "language": "python",
+        "tags": ["python", "flask"],
         "url": ""
     }
 ]
