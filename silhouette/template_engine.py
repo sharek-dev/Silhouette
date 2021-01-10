@@ -51,7 +51,10 @@ class TemplateEngine:
         self.search_regex = r"\$([^\$]*)\$"
 
     def get_value(self, var_name):
-        return self.vars[var_name]
+        if var_name in self.vars:
+            return self.vars[var_name]
+        else:
+            raise Exception("Field {} was not declared in default.properties".format(var_name))
 
     def get_function(self, f):
         pass

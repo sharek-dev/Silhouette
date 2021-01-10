@@ -43,10 +43,11 @@ def render_file_paths(src_paths, vars):
 def create_new_from_local(name, template_path, output_dir):
     app_config = ApplicationConfig(join(template_path, "default.properties"))
     template_vars = app_config.get_vars()
-    
+
     for k,v in template_vars.items():
         template_vars[k] = click.prompt(k, default=v)
-
+    template_vars["name"] = name
+    
     te = TemplateEngine(template_vars)
 
     files = [ f for f in glob.glob(join(template_path, "project") + "\\**/*", recursive=True) if isfile(f) ]
@@ -70,3 +71,10 @@ def create_new_from_template(name, template, output_dir):
         click.echo("Remote Repository cloned.")
         validate_project_structure(None, None, local_repo_path)
         create_new_from_local(name, local_repo_path, output_dir)
+
+def init_template_layout(output_dir):
+    mkdir(output_dir)
+    mkdir(join(output_dir, "project"))
+
+    with open(join(output_dir, "default.properties"), "w") as f:
+        f.write("[VARS]\nsample=value")

@@ -4,10 +4,10 @@ import click
 
 # Validates if the template name ends with the silhouette default suffix.
 def validate_template_name(ctx, param, value):
-    if value.endswith("slh3"):
+    if value.endswith(".slh"):
         return value
     else :
-        raise click.BadParameter('template name should ends with slh3. Example: helkaroui/sample.slh3')
+        raise click.BadParameter('template name should ends with slh. Example: helkaroui/sample.slh')
 
 # Should validate if the project contains :
 # - default.properties files

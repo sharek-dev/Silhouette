@@ -1,19 +1,13 @@
+from $module$.counter import ViewsCounter
 from flask import Flask, render_template
 app = Flask(__name__)
 
-# two decorators, same function
+vc = ViewsCounter()
+
 @app.route('/')
 @app.route('/index.html')
 def index():
-    return render_template('index.html', the_title='Tiger Home Page')
-
-@app.route('/symbol.html')
-def symbol():
-    return render_template('symbol.html', the_title='Tiger As Symbol')
-
-@app.route('/myth.html')
-def myth():
-    return render_template('myth.html', the_title='Tiger in Myth and Legend')
+    return render_template('index.html', title='$name;title$', views= vc.increment())
 
 if __name__ == '__main__':
-    app.run(port=8030,debug=True)
+    app.run(port=$port$,debug=True)

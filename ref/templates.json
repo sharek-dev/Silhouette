@@ -1,10 +1,10 @@
 [
     {
-        "name": "sharek_org/flask.seed",
-        "author": "Sharek.org",
+        "name": "helkaroui/simple-flask-server.slh",
+        "author": "Hamza KAROUI",
         "description": "a simple Flask server template",
         "language": "python",
         "tags": ["python", "flask"],
-        "url": ""
+        "url": "https://github.com/helkaroui/simple-flask-server.slh"
     }
 ]

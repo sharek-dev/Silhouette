@@ -1,8 +1,9 @@
 import os
 import sys
 import click
+from os.path import join, isdir
 from silhouette.validation import validate_template_name, validate_project_structure
-from silhouette.factory import create_new_from_local, create_new_from_template
+from silhouette.factory import create_new_from_local, create_new_from_template, init_template_layout
 from silhouette.download_manager import download_templates_reference
 from silhouette.utils import print_table, print_template_tree
 
@@ -14,26 +15,40 @@ def cli():
     pass
 
 @cli.command()
-@click.option('--name', prompt=True)
+@click.option('--project_name', prompt=True)
 @click.argument('template_path', callback=validate_project_structure)
 @click.argument('output_dir')
-def local(name, template_path, output_dir):
-    click.echo('New from local path {}'.format(template_path))
-    create_new_from_local(name, template_path, output_dir)
-    print_template_tree(output_dir)
+def local(project_name, template_path, output_dir):
+    new_dir_name = join(output_dir, project_name)
+    if isdir(new_dir_name):
+        raise click.BadParameter("Directory {} already exists !".format(new_dir_name))
+
+    click.echo('Create new project from local path {}'.format(template_path))
+    create_new_from_local(project_name, template_path, output_dir)
+    print_template_tree(new_dir_name)
 
 @cli.command()
-@click.option('--name', prompt=True)
+@click.option('--project_name', prompt=True)
 @click.argument('template', callback=validate_template_name)
 @click.argument('output_dir')
-def new(name, template, output_dir):
-    click.echo('New from template {}'.format(template))
-    create_new_from_template(name, template, output_dir)
-    print_template_tree(output_dir)
+def new(project_name, template, output_dir):
+    new_dir_name = join(output_dir, project_name)
+    if isdir(new_dir_name):
+        raise click.BadParameter("Directory {} already exists !".format(new_dir_name))
+    
+    click.echo('Create new project from remote template {}'.format(template))
+    create_new_from_template(project_name, template, output_dir)
+    print_template_tree(new_dir_name)
 
 @cli.command()
-def init():
-    click.echo('Dropped the database')
+@click.option('--template_name', prompt=True)
+@click.argument('output_dir')
+def init(template_name, output_dir):
+    new_dir_name = join(output_dir, template_name)
+    if isdir(new_dir_name):
+        raise click.BadParameter("Directory {} already exists !".format(new_dir_name))
+    init_template_layout(new_dir_name)
+    print_template_tree(new_dir_name)
 
 @cli.command()
 def list():
