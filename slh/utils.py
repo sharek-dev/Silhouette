@@ -142,6 +142,7 @@ def print_table(columns, data):
     for row in data:
         table.add_row(*[ row[col] for col in columns])
     console.print(table)
+    return console
 
 
 def walk_directory(directory: pathlib.Path, tree: Tree) -> None:

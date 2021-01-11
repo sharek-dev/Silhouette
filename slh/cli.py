@@ -55,9 +55,10 @@ def list():
 
 
 @cli.command(help="List refrenced templates")
-def search_github():
+@click.option('--valid', is_flag=True, default=False)
+def search_github(valid):
     click.echo("Search Github for slh templates")
-    templates = search_github_for_templates()
+    templates = search_github_for_templates(valid)
     print_table(["name", "description", "url", "author"],templates)
 
 if __name__== "__main__":

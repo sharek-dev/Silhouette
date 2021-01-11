@@ -80,7 +80,7 @@ def init_template_layout(output_dir):
     with open(join(output_dir, "default.properties"), "w") as f:
         f.write("[VARS]\nsample=value")
 
-def search_github_for_templates():
+def search_github_for_templates(valid):
     from rich.progress import Progress
     url = "https://api.github.com/search/repositories"
     params = {"q": "slh", "per_page": 50, "page": 0}
@@ -106,6 +106,13 @@ def search_github_for_templates():
             for repo in result["items"]:
                 if not repo["full_name"].endswith(".slh"):
                     continue
+                
+                if valid:
+                    file_url = "https://raw.githubusercontent.com/{}/main/default.properties".format(repo["full_name"])
+                    response = requests.get(file_url)
+                    
+                    if response.status_code == 404:
+                        continue
 
                 templates.append(
                     {
@@ -119,5 +126,4 @@ def search_github_for_templates():
             scanned_items += len(result["items"])
             _page += 1
             progress.update(search_task, advance=scanned_items)
-    
     return templates
